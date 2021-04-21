@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head></head>
+  <body>
+    <input onclick="suma()" value="Add" type="button"/>
+    <input id="a" type="text"/>
+    <input id="b" type="text"/>
+    <h3 id="result"></h3>
+
+    <script>
+        function suma (){
+          const ia = document.getElementById('a')
+          const ib = document.getElementById('b')
+          const r = document.getElementById('result')
+          r.innerHTML = add(parseInt(ia.value) ,parseInt(ib.value))
+        }
+
+        var add;
+        var importObject = {
+          
+          env: {
+            __linear_memory: new WebAssembly.Memory({ initial: 256 }),
+            __indirect_function_table: new WebAssembly.Table({initial:1, element:"funcref"}),
+            
+          },
+        };
+
+        fetch('add.wasm').then(response =>
+        response.arrayBuffer()
+        ).then(bytes =>
+        WebAssembly.instantiate(bytes, importObject)
+        ).then(results => {
+
+          add = results.instance.exports.add
+
+        });
+    </script>
+  </body>
+</html>
